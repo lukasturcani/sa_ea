@@ -100,7 +100,7 @@ def main():
     p1 = scores['test_precision_1'].mean()
     r1 = scores['test_recall_1'].mean()
 
-    print(f'accuracy\n{accuracy:.2f}', end='\n\n')
+    print(f'accuracy\n{accuracy}', end='\n\n')
     print(f'precision (not sa)\n{p0}', end='\n\n')
     print(f'recall (not sa)\n{r0}', end='\n\n')
     print(f'precision (sa)\n{p1}', end='\n\n')
