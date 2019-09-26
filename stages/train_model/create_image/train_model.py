@@ -1,0 +1,106 @@
+import logging
+from collections import Counter
+import os
+from os.path import join
+import json
+import rdkit.Chem.AllChem as rdkit
+from sklearn.ensemble import RandomForestClassifier
+from skelearn.model_selection import cross_validate
+from sklearn.metrics import (
+    make_scorer,
+    accuracy_score,
+    recall_score,
+    precision_score,
+)
+
+
+logger = logging.getLogger(__name__)
+
+
+def get_fingerprint(mol_block):
+    mol = rdkit.MolFromMolBlock(mol_block)
+    info = {}
+    fp = rdkit.GetMorganFingerprintAsBitVect(
+        mol=mol,
+        radius=8,
+        bits=512,
+        bitInfo=info,
+    )
+    fp = list(fp)
+    for bit, activators in info.items():
+        fp[bit] = len(activators)
+    return fp
+
+
+def get_dataset():
+    molder = join(os.path.dirname(__file__), 'molder')
+
+    with open(join(molder, 'database.json'), 'r') as f:
+        database = json.load(f)
+
+    with open(join(molder, 'Becky', 'opinions.json'), 'r') as f:
+        opinions = json.load(f)
+
+    fingerprints, labels = [], []
+    for inchi, label in opinions.items():
+        fingerprints.append(get_fingerprint(database[inchi]))
+        labels.append(label)
+
+    return fingerprints, labels
+
+
+def main():
+    logging.basicConfig(level=logging.DEBUG)
+
+    fingerprints, labels = get_dataset()
+    logger.debug(f'Fingerprint shape is {fingerprints.shape}.')
+    logger.debug(f'Collected labels:\n{Counter(labels)}')
+
+    clf = RandomForestClassifier(
+        n_estimators=100,
+    )
+
+    scores = cross_validate(
+        estimator=clf,
+        X=fingerprints,
+        y=labels,
+        scoring={
+            'accuracy': make_scorer(accuracy_score),
+            'precision_0': make_scorer(
+                score_func=precision_score,
+                pos_label=0,
+                labels=[0],
+            ),
+            'recall_0': make_scorer(
+                score_func=recall_score,
+                pos_label=0,
+                labels=[0],
+            ),
+            'precision_1': make_scorer(
+                score_func=precision_score,
+                pos_label=1,
+                labels=[1],
+            ),
+            'recall_1': make_scorer(
+                score_func=recall_score,
+                pos_label=1,
+                labels=[1],
+            ),
+        }
+    )
+
+    accuracy = scores['test_accuracy'].mean()
+    p0 = scores['test_precision_0'].mean()
+    r0 = scores['test_recall_0'].mean()
+    p1 = scores['test_precision_1'].mean()
+    r1 = scores['test_recall_1'].mean()
+
+    print(f'accuracy\n{accuracy:.2f}', end='\n\n')
+    print(f'precision (not sa)\n{p0}', end='\n\n')
+    print(f'recall (not sa)\n{r0}', end='\n\n')
+    print(f'precision (sa)\n{p1}', end='\n\n')
+    print(f'recall (sa)\n{r1}', end='\n\n')
+
+
+if __name__ == '__main__':
+    main()
