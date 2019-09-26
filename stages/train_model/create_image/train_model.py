@@ -65,6 +65,7 @@ def main():
         estimator=clf,
         X=fingerprints,
         y=labels,
+        cv=5,
         scoring={
             'accuracy': make_scorer(accuracy_score),
             'precision_0': make_scorer(
