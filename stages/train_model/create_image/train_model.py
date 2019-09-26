@@ -7,6 +7,7 @@ import rdkit.Chem.AllChem as rdkit
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_validate
+from sklearn.utils import shuffle
 from sklearn.metrics import (
     make_scorer,
     accuracy_score,
@@ -46,10 +47,12 @@ def get_dataset():
         fingerprints.append(get_fingerprint(database[inchi]))
         labels.append(label)
 
-    return np.array(fingerprints), np.array(labels)
+    fingerprints, labels = np.array(fingerprints), np.array(labels)
+    return shuffle(fingerprints, labels)
 
 
 def main():
+    np.random.seed(4)
     logging.basicConfig(level=logging.DEBUG)
 
     fingerprints, labels = get_dataset()
