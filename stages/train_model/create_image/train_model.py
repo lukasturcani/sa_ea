@@ -5,6 +5,7 @@ from os.path import join
 import json
 import rdkit.Chem.AllChem as rdkit
 import numpy as np
+import pickle
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.utils import shuffle
@@ -57,7 +58,7 @@ def main():
 
     fingerprints, labels = get_dataset()
     logger.debug(f'Fingerprint shape is {fingerprints.shape}.')
-    logger.debug(f'Collected labels:\n{Counter(labels)}')
+    logger.debug(f'Collected labels are {Counter(labels)}.')
 
     clf = RandomForestClassifier(
         n_estimators=100,
@@ -105,6 +106,12 @@ def main():
     print(f'recall (not sa)\n{r0}', end='\n\n')
     print(f'precision (sa)\n{p1}', end='\n\n')
     print(f'recall (sa)\n{r1}', end='\n\n')
+
+    clf = RandomForestClassifier(**clf.get_params())
+    clf.fit(fingerprints, labels)
+
+    with open('sa_model.pkl', 'wb') as f:
+        pickle.dump(clf, f)
 
 
 if __name__ == '__main__':
