@@ -1,4 +1,4 @@
-name: sa_ea
+name: sa_ea_train_model
 channels:
   - rdkit
   - defaults
