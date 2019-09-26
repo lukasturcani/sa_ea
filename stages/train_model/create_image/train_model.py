@@ -5,7 +5,7 @@ from os.path import join
 import json
 import rdkit.Chem.AllChem as rdkit
 from sklearn.ensemble import RandomForestClassifier
-from skelearn.model_selection import cross_validate
+from sklearn.model_selection import cross_validate
 from sklearn.metrics import (
     make_scorer,
     accuracy_score,
@@ -18,12 +18,11 @@ logger = logging.getLogger(__name__)
 
 
 def get_fingerprint(mol_block):
-    mol = rdkit.MolFromMolBlock(mol_block)
     info = {}
     fp = rdkit.GetMorganFingerprintAsBitVect(
-        mol=mol,
+        mol=rdkit.MolFromMolBlock(mol_block),
         radius=8,
-        bits=512,
+        nBits=512,
         bitInfo=info,
     )
     fp = list(fp)
@@ -58,6 +57,7 @@ def main():
 
     clf = RandomForestClassifier(
         n_estimators=100,
+        n_jobs=-1,
     )
 
     scores = cross_validate(
