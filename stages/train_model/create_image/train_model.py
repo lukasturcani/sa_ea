@@ -4,6 +4,7 @@ import os
 from os.path import join
 import json
 import rdkit.Chem.AllChem as rdkit
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import (
@@ -45,7 +46,7 @@ def get_dataset():
         fingerprints.append(get_fingerprint(database[inchi]))
         labels.append(label)
 
-    return fingerprints, labels
+    return np.array(fingerprints), np.array(labels)
 
 
 def main():
