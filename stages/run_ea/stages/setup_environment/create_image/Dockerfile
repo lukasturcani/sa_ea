@@ -17,4 +17,4 @@ COPY --from=STK /opt/stk /setup_environment
 
 SHELL ["/bin/bash", "-c"]
 RUN conda env create -f environment.yaml
-RUN 
+# RUN 
