@@ -1,5 +1,5 @@
 Bootstrap: docker-daemon
-From: docker-daemon://sa_ea_run_ea_setup_environment
+From: sa_ea_run_ea_setup_environment:latest
 
 %runscript
     source activate sa_ea_run_ea; \
