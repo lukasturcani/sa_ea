@@ -12,7 +12,7 @@ RUN git config --global credential.helper 'store --file /opt/gitcredentials'; \
 FROM continuumio/miniconda3:4.7.10
 
 WORKDIR /setup_environment
-COPY ./Dockerfile ./create_image.bash ./setup_stage/setup_environment /setup_environment
+COPY ./Dockerfile ./create_image.bash ./setup_stage/setup_environment /setup_environment/
 COPY --from=TRAIN_MODEL /train_model/sa_model.pkl /setup_environment
 COPY --from=INSTALL /opt/stk /setup_environment/stk
 COPY ./setup_stage/schrodinger2018-1 /opt/schrodinger2018-1
