@@ -12,4 +12,5 @@ The Singularity image can be used to run the EA with::
 
 $ singularity exec /path/to/run_ea.sif /path/to/run_ea.bash path/to/ea/input/file.py
 
-where `run_ea.bash` is the file located in this directory.
+where `run_ea.bash` is the file located in
+`sa_ea/stages/run_ea/stages/run_ea/run_ea.bash`.
