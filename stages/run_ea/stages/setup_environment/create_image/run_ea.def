@@ -2,5 +2,5 @@ Bootstrap: docker-daemon
 From: sa_ea_run_ea_setup_environment:latest
 
 %runscript
-    source activate sa_ea_run_ea; \
+    source activate sa_ea_run_ea
     PYTHONPATH=/setup_environment/stk/src python -m stk.ea "$1"

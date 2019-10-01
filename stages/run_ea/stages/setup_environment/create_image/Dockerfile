@@ -16,6 +16,7 @@ COPY ./Dockerfile ./create_image.bash ./setup_stage/setup_environment /setup_env
 COPY --from=TRAIN_MODEL /train_model/sa_model.pkl /setup_environment
 COPY --from=INSTALL /opt/stk /setup_environment/stk
 COPY ./setup_stage/schrodinger2018-1 /opt/schrodinger2018-1
+COPY ./setup_stage/xtb_190418 /opt/xtb_190418
 
 SHELL ["/bin/bash", "-c"]
 RUN conda env create -f environment.yaml
