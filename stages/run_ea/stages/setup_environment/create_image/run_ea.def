@@ -1,5 +1,5 @@
-Bootstrap: docker-daemon
-From: sa_ea_run_ea_setup_environment:latest
+Bootstrap: docker-archive
+From: /home/lukas/temp/sa_ea_run_ea_setup_environment.tar
 
 %runscript
     source activate sa_ea_run_ea
