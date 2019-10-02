@@ -12,5 +12,5 @@ LD_PRELOAD=""
 RUN_SCRIPT=/home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_ea.bash
 INPUT_FILE=/home/lt912/sa_ea/stages/run_ea/stages/run_ea/create_image/input4/input4.py
 cp "$RUN_SCRIPT" "$PWD"
-singularity exec /home/lt912/singularity_images/run_ea.sif run_ea.bash "$INPUT_FILE"
+singularity exec /home/lt912/singularity_images/run_ea.sif "$PWD"/run_ea.bash "$INPUT_FILE"
 mv stk_ea_runs/0/output.tgz /home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_outputs/input4.tar.gz
