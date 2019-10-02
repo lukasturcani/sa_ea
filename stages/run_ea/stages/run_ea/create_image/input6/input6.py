@@ -7,7 +7,7 @@ import numpy as np
 
 
 random_seed = 14
-xtb_path = '/setup_environment/xtb_190418/bin/xtb'
+xtb_path = '/home/lt912/xtb_190418/bin/xtb'
 num_processes = 25
 
 # #####################################################################
@@ -50,7 +50,10 @@ tar_output = True
 # Initial population.
 # #####################################################################
 
-db = '/setup_environment'
+db = (
+    '/home/lt912/sa_ea/stages/run_ea/stages/setup_environment'
+    '/create_image/setup_stage/setup_environment'
+)
 
 amines = [
     stk.BuildingBlock.init_from_file(path, ['amine'])
@@ -170,12 +173,12 @@ mutator = stk.RandomMutation(
 
 optimizer = stk.OptimizerSequence(
     stk.MacroModelForceField(
-        macromodel_path='/opt/schrodinger2018-1',
+        macromodel_path='/home/lt912/schrodinger2018-1',
         restricted=True,
         use_cache=True,
     ),
     stk.MacroModelForceField(
-        macromodel_path='/opt/schrodinger2018-1',
+        macromodel_path='/home/lt912/schrodinger2018-1',
         restricted=False,
         use_cache=True,
     ),
