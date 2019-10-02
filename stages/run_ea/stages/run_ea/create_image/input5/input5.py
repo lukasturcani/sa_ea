@@ -197,14 +197,19 @@ optimizer = stk.OptimizerSequence(
 
 def pore_diameter(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
-    return pw_mol.calculate_pore_diameter()
+    diameter = pw_mol.calculate_pore_diameter()
+    mol.pore_diameter = diameter
+    return diameter
 
 
 def window_std(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
     windows = pw_mol.calculate_windows()
+    std = None
     if windows is not None and len(windows) > 3:
-        return np.std(windows)
+        std = np.std(windows)
+    mol.window_std = std
+    return std
 
 
 fitness_calculator = stk.PropertyVector(
@@ -213,7 +218,6 @@ fitness_calculator = stk.PropertyVector(
 )
 
 fitness_normalizer = stk.NormalizerSequence(
-    # This coefficient needs to make sense for conformer_analysis.
     stk.Power([1, -1]),
     stk.ScaleByMean(),
     stk.Multiply([1.0, 1.0]),
@@ -236,11 +240,13 @@ plotters = [
         filename='fitness_plot',
         property_fn=lambda mol: mol.fitness,
         y_label='Fitness',
+        filter=lambda mol: mol.fitness is not None,
     ),
     stk.ProgressPlotter(
-        filename='max_window_diameter',
-        property_fn=lambda mol: mol.max_window_diameter,
-        y_label='Maximum Window Diameter / A',
+        filename='window_std',
+        property_fn=lambda mol: mol.window_std,
+        y_label='Std. Dev. of Window Diameters / A',
+        filter=lambda mol: mol.window_std is not None,
     ),
     stk.ProgressPlotter(
         filename='pore_diameter',
