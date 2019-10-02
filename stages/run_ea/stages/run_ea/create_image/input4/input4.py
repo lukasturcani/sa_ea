@@ -4,9 +4,6 @@ from glob import iglob
 from os.path import join
 import logging
 import numpy as np
-import pickle
-import rdkit.Chem.AllChem as rdkit
-
 
 random_seed = 12
 xtb_path = '/setup_environment/xtb_190418/bin/xtb'

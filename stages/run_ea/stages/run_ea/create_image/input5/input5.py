@@ -4,8 +4,6 @@ from glob import iglob
 from os.path import join
 import logging
 import numpy as np
-import pickle
-import rdkit.Chem.AllChem as rdkit
 
 
 random_seed = 13
