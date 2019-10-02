@@ -247,11 +247,6 @@ plotters = [
         property_fn=lambda mol: mol.pore_diameter,
         y_label='Pore Diameter / A',
     ),
-    stk.ProgressPlotter(
-        filename='sa_score',
-        property_fn=lambda mol: mol.sa_score,
-        y_label='SA Score / arb. unit',
-    )
 ]
 
 stk.SelectionPlotter(
