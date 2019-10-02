@@ -11,5 +11,6 @@ module load singularity
 LD_PRELOAD=""
 RUN_SCRIPT=/home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_ea.bash
 INPUT_FILE=/home/lt912/sa_ea/stages/run_ea/stages/run_ea/create_image/input6/input6.py
-singularity exec /home/lt912/singularity_images/run_ea.sif "$RUN_SCRIPT" "$INPUT_FILE"
+cp "$RUN_SCRIPT" "$PWD"
+singularity exec /home/lt912/singularity_images/run_ea.sif run_ea.bash "$INPUT_FILE"
 mv stk_ea_runs/0/output.tgz /home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_outputs/input6.tar.gz
