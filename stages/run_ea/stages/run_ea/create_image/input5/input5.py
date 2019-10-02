@@ -207,44 +207,16 @@ def window_std(mol):
         return np.std(windows)
 
 
-def fingerprint(mol):
-    rdkit_mol = mol.to_rdkit_mol()
-    rdkit.SanitizeMol(rdkit_mol)
-    info = {}
-    fp = rdkit.GetMorganFingerprintAsBitVect(
-        mol=rdkit_mol,
-        radius=8,
-        nBits=512,
-        bitInfo=info,
-    )
-    fp = list(fp)
-    for bit, activators in info.items():
-        fp[bit] = len(activators)
-    return fp
-
-
-with open('/setup_environment/sa_model.pkl', 'rb') as f:
-    clf = pickle.load(f)
-
-
-def sa_score(mol):
-    return sum(
-        clf.predict(fingerprint(bb))
-        for bb in mol.get_building_blocks()
-    )
-
-
 fitness_calculator = stk.PropertyVector(
     pore_diameter,
     window_std,
-    sa_score,
 )
 
 fitness_normalizer = stk.NormalizerSequence(
     # This coefficient needs to make sense for conformer_analysis.
-    stk.Power([1, -1, 1]),
+    stk.Power([1, -1]),
     stk.ScaleByMean(),
-    stk.Multiply([1.0, 1.0, 10.0]),
+    stk.Multiply([1.0, 1.0]),
     stk.Sum(),
 )
 
