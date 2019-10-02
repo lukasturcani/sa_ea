@@ -172,12 +172,12 @@ mutator = stk.RandomMutation(
 
 optimizer = stk.OptimizerSequence(
     stk.MacroModelForceField(
-        macromodel_path='/home/lt912/schrodinger2018-1',
+        macromodel_path='/home/lt912/schrodinger2017-4',
         restricted=True,
         use_cache=True,
     ),
     stk.MacroModelForceField(
-        macromodel_path='/home/lt912/schrodinger2018-1',
+        macromodel_path='/home/lt912/schrodinger2017-4',
         restricted=False,
         use_cache=True,
     ),
