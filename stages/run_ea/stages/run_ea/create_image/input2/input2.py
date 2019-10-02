@@ -197,14 +197,18 @@ optimizer = stk.OptimizerSequence(
 
 def pore_diameter(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
-    return pw_mol.calculate_pore_diameter()
+    diameter = pw_mol.calculate_pore_diameter()
+    mol.pore_diameter = diameter
+    return diameter
 
 
 def window_std(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
     windows = pw_mol.calculate_windows()
+    mol.window_std = None
     if windows is not None and len(windows) > 3:
-        return np.std(windows)
+        mol.window_std = np.std(windows)
+    return mol.window_std
 
 
 def fingerprint(mol):
@@ -228,10 +232,11 @@ with open('/setup_environment/sa_model.pkl', 'rb') as f:
 
 
 def sa_score(mol):
-    return sum(
+    mol.sa_score = sum(
         clf.predict(fingerprint(bb))
         for bb in mol.get_building_blocks()
     )
+    return mol.sa_score
 
 
 fitness_calculator = stk.PropertyVector(
