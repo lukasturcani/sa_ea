@@ -1,4 +1,4 @@
-!/bin/sh
+#!/bin/sh
 
 #PBS -j oe
 #PBS -o /home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_outputs/oe.input4
