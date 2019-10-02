@@ -194,19 +194,17 @@ optimizer = stk.OptimizerSequence(
 
 def pore_diameter(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
-    diameter = pw_mol.calculate_pore_diameter()
-    mol.pore_diameter = diameter
-    return diameter
+    mol.pore_diameter = pw_mol.calculate_pore_diameter()
+    return mol.pore_diameter
 
 
 def window_std(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
     windows = pw_mol.calculate_windows()
-    std = None
+    mol.window_std = None
     if windows is not None and len(windows) > 3:
-        std = np.std(windows)
-    mol.window_std = std
-    return std
+        mol.window_std = np.std(windows)
+    return mol.window_std
 
 
 fitness_calculator = stk.PropertyVector(
