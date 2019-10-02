@@ -6,11 +6,8 @@
 #PBS -lwalltime=24:00:00
 #PBS -lselect=1:ncpus=20:mem=100gb
 
-module load singularity
-
-LD_PRELOAD=""
-RUN_SCRIPT=/home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_ea.bash
-INPUT_FILE=/home/lt912/sa_ea/stages/run_ea/stages/run_ea/create_image/input4/input4.py
-cp "$RUN_SCRIPT" "$PWD"
-singularity exec /home/lt912/singularity_images/run_ea.sif "$PWD"/run_ea.bash "$INPUT_FILE"
-mv stk_ea_runs/0/output.tgz /home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_outputs/input4.tar.gz
+source activate sa_ea_run_ea
+RUN_EA_DIR=/home/lt912/sa_ea/stages/run_ea/stages/run_ea
+IFILE=input4
+PYTHONPATH="$HOME/stk/src" python -m stk.ea "$RUN_EA_DIR"/create_image/"$IFILE"/"$IFILE".py
+mv stk_ea_runs/0/output.tgz "$RUN_EA_DIR"/run_outputs/$IFILE.tar.gz
