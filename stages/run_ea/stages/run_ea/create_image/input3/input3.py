@@ -269,11 +269,13 @@ plotters = [
         filename='fitness_plot',
         property_fn=lambda mol: mol.fitness,
         y_label='Fitness',
+        filter=lambda mol: mol.fitness is not None,
     ),
     stk.ProgressPlotter(
-        filename='max_window_diameter',
-        property_fn=lambda mol: mol.max_window_diameter,
-        y_label='Maximum Window Diameter / A',
+        filename='window_std',
+        property_fn=lambda mol: mol.window_std,
+        y_label='Std. Dev. of Window Diameters / A',
+        filter=lambda mol: mol.window_std is not None,
     ),
     stk.ProgressPlotter(
         filename='pore_diameter',
@@ -284,7 +286,7 @@ plotters = [
         filename='sa_score',
         property_fn=lambda mol: mol.sa_score,
         y_label='SA Score / arb. unit',
-    )
+    ),
 ]
 
 stk.SelectionPlotter(
