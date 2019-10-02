@@ -246,7 +246,6 @@ fitness_calculator = stk.PropertyVector(
 )
 
 fitness_normalizer = stk.NormalizerSequence(
-    # This coefficient needs to make sense for conformer_analysis.
     stk.Power([1, -1, 1]),
     stk.ScaleByMean(),
     stk.Multiply([1.0, 1.0, 10.0]),
