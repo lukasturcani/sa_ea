@@ -197,9 +197,8 @@ optimizer = stk.OptimizerSequence(
 
 def pore_diameter(mol):
     pw_mol = pywindow.Molecule.load_rdkit_mol(mol.to_rdkit_mol())
-    diameter = pw_mol.calculate_pore_diameter()
-    mol.pore_diameter = diameter
-    return diameter
+    mol.pore_diameter = pw_mol.calculate_pore_diameter()
+    return mol.pore_diameter
 
 
 def window_std(mol):
