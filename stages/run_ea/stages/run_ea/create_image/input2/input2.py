@@ -58,12 +58,12 @@ db = (
 )
 
 amines = [
-    stk.BuildingBlock.init_from_file(path, ['amine'])
+    stk.BuildingBlock.init_from_file(path, ['amine'], True)
     for path in iglob(join(db, 'amines2f', '*.mol'))
 ]
 
 aldehydes = [
-    stk.BuildingBlock.init_from_file(path, ['aldehyde'])
+    stk.BuildingBlock.init_from_file(path, ['aldehyde'], True)
     for path in iglob(join(db, 'aldehydes3f', '*.mol'))
 ]
 
@@ -74,15 +74,16 @@ population = stk.EAPopulation.init_random(
     topology_graphs=[stk.cage.FourPlusSix()],
     size=population_size,
     random_seed=random_seed,
+    use_cache=True,
 )
 
 # #####################################################################
 # Selector for selecting the next generation.
 # #####################################################################
 
-generation_selector = stk.SelectorSequence(
-    selector1=stk.AboveAverage(duplicate_mols=False),
-    selector2=stk.RemoveMolecules(
+generation_selector = stk.Sequence(
+    stk.AboveAverage(duplicate_mols=False),
+    stk.RemoveMolecules(
         remover=stk.AboveAverage(duplicate_mols=False),
         selector=stk.Roulette(
             duplicate_mols=False,
@@ -100,9 +101,9 @@ above_average = stk.AboveAverage(
     batch_size=2,
     duplicate_batches=False,
 )
-crossover_selector = stk.SelectorSequence(
-    selector1=above_average,
-    selector2=stk.RemoveBatches(
+crossover_selector = stk.Sequence(
+    above_average,
+    stk.RemoveBatches(
         remover=above_average,
         selector=stk.StochasticUniversalSampling(
             num_batches=5,
@@ -137,7 +138,7 @@ crosser = stk.GeneticRecombination(
 # Mutator.
 # #####################################################################
 
-mutator = stk.RandomMutation(
+mutator = stk.Random(
     stk.RandomBuildingBlock(
         building_blocks=amines,
         key=lambda mol: mol.func_groups[0].fg_type.name == 'amine',
@@ -173,7 +174,7 @@ mutator = stk.RandomMutation(
 # Optimizer.
 # #####################################################################
 
-optimizer = stk.OptimizerSequence(
+optimizer = stk.Sequence(
     stk.MacroModelForceField(
         macromodel_path='/home/lt912/schrodinger2017-4',
         restricted=True,
@@ -226,7 +227,7 @@ def fingerprint(mol):
     fp = list(fp)
     for bit, activators in info.items():
         fp[bit] = len(activators)
-    return fp
+    return [fp]
 
 
 with open('/home/lt912/sa_model.pkl', 'rb') as f:
@@ -235,9 +236,9 @@ with open('/home/lt912/sa_model.pkl', 'rb') as f:
 
 def sa_score(mol):
     mol.sa_score = sum(
-        clf.predict(fingerprint(bb))
+        clf.predict(fingerprint(bb))[0]
         for bb in mol.get_building_blocks()
-    )
+    ) + 1
     return mol.sa_score
 
 
@@ -247,11 +248,25 @@ fitness_calculator = stk.PropertyVector(
     sa_score,
 )
 
-fitness_normalizer = stk.NormalizerSequence(
-    stk.Power([1, -1, 1]),
-    stk.ScaleByMean(),
-    stk.Multiply([1.0, 1.0, 10.0]),
-    stk.Sum(),
+
+def valid_fitness(population, mol):
+    return None not in population.get_fitness_values()[mol]
+
+
+fitness_normalizer = stk.Sequence(
+    stk.Power([1, -1, 1], filter=valid_fitness),
+    stk.DivideByMean(filter=valid_fitness),
+    stk.Multiply([1.0, 1.0, 10.0], filter=valid_fitness),
+    stk.Sum(filter=valid_fitness),
+    stk.ReplaceFitness(
+        replacement_fn=lambda population:
+            min(
+                f for _, f in population.get_fitness_values().items()
+                if not isinstance(f, list)
+            ) / 2,
+        filter=lambda p, m:
+            isinstance(p.get_fitness_values()[m], list),
+    )
 )
 
 
@@ -268,24 +283,33 @@ terminator = stk.NumGenerations(60)
 plotters = [
     stk.ProgressPlotter(
         filename='fitness_plot',
-        property_fn=lambda mol: mol.fitness,
+        property_fn=lambda progress, mol:
+            progress.get_fitness_values()[mol],
         y_label='Fitness',
-        filter=lambda mol: mol.fitness is not None,
+        filter=lambda progress, mol:
+            progress.get_fitness_values()[mol],
+        progress_fn=lambda progress:
+            progress.set_fitness_values_from_calculators(
+                fitness_calculator=fitness_calculator,
+                fitness_normalizer=fitness_normalizer,
+                num_processes=num_processes,
+            )
     ),
     stk.ProgressPlotter(
         filename='window_std',
         property_fn=lambda mol: mol.window_std,
         y_label='Std. Dev. of Window Diameters / A',
-        filter=lambda mol: mol.window_std is not None,
+        filter=lambda progress, mol:
+            mol.window_std is not None,
     ),
     stk.ProgressPlotter(
         filename='pore_diameter',
-        property_fn=lambda mol: mol.pore_diameter,
+        property_fn=lambda progress, mol: mol.pore_diameter,
         y_label='Pore Diameter / A',
     ),
     stk.ProgressPlotter(
         filename='sa_score',
-        property_fn=lambda mol: mol.sa_score,
+        property_fn=lambda progress, mol: mol.sa_score,
         y_label='SA Score / arb. unit',
     ),
 ]
