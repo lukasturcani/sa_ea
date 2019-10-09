@@ -8,7 +8,7 @@ import numpy as np
 
 random_seed = 13
 xtb_path = '/home/lt912/xtb_190418/bin/xtb'
-num_processes = 25
+num_processes = 20
 
 # #####################################################################
 # Set logging level.
