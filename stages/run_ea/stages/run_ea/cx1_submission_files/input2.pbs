@@ -2,7 +2,6 @@
 
 #PBS -j oe
 #PBS -o /home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_outputs/oe.input2
-#PBS -q pqkjelfs
 #PBS -lwalltime=24:00:00
 #PBS -lselect=1:ncpus=20:mem=100gb
 
