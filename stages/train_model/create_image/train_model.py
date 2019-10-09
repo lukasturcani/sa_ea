@@ -63,6 +63,7 @@ def main():
     clf = RandomForestClassifier(
         n_estimators=100,
         n_jobs=-1,
+        class_weight='balanced',
     )
 
     scores = cross_validate(
