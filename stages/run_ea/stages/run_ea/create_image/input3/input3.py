@@ -10,7 +10,7 @@ import rdkit.Chem.AllChem as rdkit
 
 random_seed = 14
 xtb_path = '/home/lt912/xtb_190418/bin/xtb'
-num_processes = 20
+num_processes = 32
 
 # #####################################################################
 # Set logging level.
