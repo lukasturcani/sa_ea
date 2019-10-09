@@ -236,7 +236,7 @@ with open('/home/lt912/sa_model.pkl', 'rb') as f:
 
 def sa_score(mol):
     mol.sa_score = sum(
-        clf.predict(fingerprint(bb))[0]
+        clf.predict_proba(fingerprint(bb))[0][1]
         for bb in mol.get_building_blocks()
     ) + 1
     return mol.sa_score
