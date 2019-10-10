@@ -95,21 +95,11 @@ generation_selector = stk.Sequence(
 # Selector for selecting parents.
 # #####################################################################
 
-above_average = stk.AboveAverage(
+crossover_selector = stk.StochasticUniversalSampling(
+    num_batches=5,
     batch_size=2,
     duplicate_batches=False,
-)
-crossover_selector = stk.Sequence(
-    above_average,
-    stk.RemoveBatches(
-        remover=above_average,
-        selector=stk.StochasticUniversalSampling(
-            num_batches=5,
-            batch_size=2,
-            duplicate_batches=False,
-            random_seed=random_seed,
-        ),
-    ),
+    random_seed=random_seed,
 )
 
 # #####################################################################
@@ -181,12 +171,6 @@ optimizer = stk.Sequence(
     stk.MacroModelForceField(
         macromodel_path='/home/lt912/schrodinger2017-4',
         restricted=False,
-        use_cache=True,
-    ),
-    stk.XTB(
-        xtb_path=xtb_path,
-        calculate_hessian=False,
-        unlimited_memory=False,
         use_cache=True,
     ),
     use_cache=True,
