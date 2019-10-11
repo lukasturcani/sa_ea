@@ -26,13 +26,13 @@ log_file = True
 # Toggle the dumping of generated molecules.
 # #####################################################################
 
-database_dump = True
+database_dump = False
 
 # #####################################################################
 # Toggle the dumping of EA generations.
 # #####################################################################
 
-progress_dump = True
+progress_dump = False
 
 # #####################################################################
 # Toggle the dumping of molecules at every generation.
