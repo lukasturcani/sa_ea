@@ -46,7 +46,7 @@ debug_dumps = False
 # Make a tar archive of the output.
 # #####################################################################
 
-tar_output = True
+tar_output = False
 
 # #####################################################################
 # Initial population.
