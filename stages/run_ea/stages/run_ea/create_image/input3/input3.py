@@ -276,6 +276,7 @@ def apply(fn):
     return inner
 
 
+"""
 plotters = [
     stk.ProgressPlotter(
         filename='fitness_plot',
@@ -312,6 +313,7 @@ plotters = [
         progress_fn=apply(sa_score),
     ),
 ]
+"""
 
 stk.SelectionPlotter(
     filename='generational_selection',

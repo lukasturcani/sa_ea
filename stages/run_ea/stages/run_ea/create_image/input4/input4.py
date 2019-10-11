@@ -245,6 +245,7 @@ def apply(fn):
     return inner
 
 
+"""
 plotters = [
     stk.ProgressPlotter(
         filename='fitness_plot',
@@ -275,6 +276,7 @@ plotters = [
         progress_fn=apply(pore_diameter),
     ),
 ]
+"""
 
 stk.SelectionPlotter(
     filename='generational_selection',
