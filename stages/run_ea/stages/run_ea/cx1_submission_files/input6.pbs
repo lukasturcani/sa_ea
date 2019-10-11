@@ -9,5 +9,5 @@ source activate sa_ea_run_ea
 RUN_EA_DIR=/home/lt912/sa_ea/stages/run_ea/stages/run_ea
 IFILE=input6
 PYTHONPATH="$HOME"/stk/src python -m stk.ea "$RUN_EA_DIR"/create_image/"$IFILE"/"$IFILE".py &> "$IFILE".log
-mv stk_ea_runs/0/output.tgz "$RUN_EA_DIR"/run_outputs/"$IFILE".tar.gz
+tar -czf "$RUN_EA_DIR"/run_outputs/"$IFILE".tar.gz stk_ea_runs/0
 mv "$IFILE".log "$RUN_EA_DIR"/run_outputs
