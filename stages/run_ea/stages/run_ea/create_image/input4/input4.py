@@ -233,6 +233,18 @@ terminator = stk.NumGenerations(60)
 # Make plotters.
 # #####################################################################
 
+
+def apply(fn):
+
+    def filter_fn(mol):
+        return not hasattr(mol, fn.__name__)
+
+    def inner(progress):
+        all(True for _ in map(fn, filter(filter_fn, progress)))
+
+    return inner
+
+
 plotters = [
     stk.ProgressPlotter(
         filename='fitness_plot',
@@ -254,11 +266,13 @@ plotters = [
         y_label='Std. Dev. of Window Diameters / A',
         filter=lambda progress, mol:
             mol.window_std is not None,
+        progress_fn=apply(window_std),
     ),
     stk.ProgressPlotter(
         filename='pore_diameter',
         property_fn=lambda progress, mol: mol.pore_diameter,
         y_label='Pore Diameter / A',
+        progress_fn=apply(pore_diameter),
     ),
 ]
 
