@@ -293,7 +293,7 @@ plotters = [
     ),
     stk.ProgressPlotter(
         filename='window_std',
-        property_fn=lambda mol: mol.window_std,
+        property_fn=lambda progress, mol: mol.window_std,
         y_label='Std. Dev. of Window Diameters / A',
         filter=lambda progress, mol:
             mol.window_std is not None,
