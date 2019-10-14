@@ -2,6 +2,7 @@ import argparse
 import stk
 import pickle
 import rdkit.Chem.AllChem as rdkit
+from os.path import join
 
 
 def fingerprint(mol):
@@ -27,7 +28,7 @@ def load_model(model_path):
     def inner(mol):
         return sum(
             model.predict_proba(fingerprint(bb))[0][1]
-            for bb in mol.get_building_block()
+            for bb in mol.get_building_blocks()
         ) + 1
 
     return inner
@@ -43,6 +44,10 @@ def main():
         'sa_model_path',
         help='Path to a pickled estimator predicting SA.',
     )
+    parser.add_argument(
+        'output_directory',
+        help='Path to the directory into which output is written.'
+    )
 
     args = parser.parse_args()
     population = stk.Population.load(args.population_path, True)
@@ -55,7 +60,7 @@ def main():
     print(f'Maximum SA in the population was {max_sa}.')
     print(f'Mean SA in the population was {mean_sa}.')
     for rank, mol in enumerate(sorted_population):
-        mol.write(f'sa_rank_{rank}.mol')
+        mol.write(join(args.output_directory, f'sa_rank_{rank}.mol'))
 
 
 if __name__ == '__main__':
