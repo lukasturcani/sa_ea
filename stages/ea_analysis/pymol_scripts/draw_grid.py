@@ -3,11 +3,12 @@ from glob import glob
 from os.path import join
 
 
-def plot_grid(folder):
+def draw_grid(folder):
     for filename in glob(join(folder, '*.mol')):
         cmd.load(filename)
 
     cmd.set('grid_mode', 1)
+    cmd.color('grey', 'elem C')
 
 
-cmd.extend(plot_grid.__name__, plot_grid)
+cmd.extend(draw_grid.__name__, draw_grid)
