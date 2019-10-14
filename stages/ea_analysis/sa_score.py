@@ -57,6 +57,7 @@ def main():
     mean_sa = sum(map(sa, population)) / len(population)
 
     max_sa = sa(sorted_population[0])
+    print(args.population_path)
     print(f'Maximum SA in the population was {max_sa}.')
     print(f'Mean SA in the population was {mean_sa}.')
     for rank, mol in enumerate(sorted_population):

@@ -7,5 +7,5 @@ for RUN in {1..6}
 do
     mkdir $RUN
     POPULATION_PATH="$RUN_OUTPUT_DIR"/"$RUN"/scratch/generation_0.json
-    PYTHONPATH="$STK_PATH" python "$ANALYSIS_SCRIPT" "$POPULATION_PATH" "$SA_MODEL_PATH" "$RUN" &> "$RUN".log
+    PYTHONPATH="$STK_PATH" python "$ANALYSIS_SCRIPT" "$POPULATION_PATH" "$SA_MODEL_PATH" "$RUN" 2> "$RUN".errors
 done
