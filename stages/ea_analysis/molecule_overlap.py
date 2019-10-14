@@ -6,17 +6,18 @@ import pandas as pd
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'population_path',
+        metavar='population_path',
         help='Path to an stk Population dump file.',
         nargs='+',
+        dest='population_paths',
     )
 
     args = parser.parse_args()
     pops = []
-    for path in args.population_path:
+    for path in args.population_paths:
         pops.append(set(stk.Population.load(path, True)))
 
-    for i, pop in enumerate(args.population_path):
+    for i, pop in enumerate(args.population_paths):
         print(i, pop)
 
     overlaps = [
