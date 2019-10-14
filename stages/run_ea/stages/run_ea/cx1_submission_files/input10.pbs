@@ -5,6 +5,10 @@
 #PBS -lwalltime=24:00:00
 #PBS -lselect=1:ncpus=32:mem=100gb
 
+cd "$HOME"/stk
+git checkout 6deec5bb51b8c35b769c9f9382e5746f76eee21c
+cd -
+
 source activate sa_ea_run_ea
 RUN_EA_DIR=/home/lt912/sa_ea/stages/run_ea/stages/run_ea
 IFILE=input10
