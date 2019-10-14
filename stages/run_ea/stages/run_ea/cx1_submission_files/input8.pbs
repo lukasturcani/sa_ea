@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#PBS -j oe
+#PBS -o /home/lt912/sa_ea/stages/run_ea/stages/run_ea/run_outputs/oe.input8
+#PBS -lwalltime=24:00:00
+#PBS -lselect=1:ncpus=32:mem=100gb
+
+source activate sa_ea_run_ea
+RUN_EA_DIR=/home/lt912/sa_ea/stages/run_ea/stages/run_ea
+IFILE=input8
+PYTHONPATH="$HOME"/stk/src python -m stk.ea "$RUN_EA_DIR"/create_image/"$IFILE"/"$IFILE".py &> "$IFILE".log
+tar -czf "$RUN_EA_DIR"/run_outputs/"$IFILE".tar.gz stk_ea_runs/0
+mv "$IFILE".log "$RUN_EA_DIR"/run_outputs
